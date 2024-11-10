@@ -43,6 +43,7 @@ class _AppTextFieldState extends State<AppTextField> {
   void initState() {
     super.initState();
     widget.controller.addListener(_validate);
+    _isObscured = widget.obscureText;
   }
 
   @override

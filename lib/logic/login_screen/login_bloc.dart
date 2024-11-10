@@ -1,21 +1,44 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../services/api_service.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginInitial());
+  final ApiService _apiService = ApiService();
 
-  Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is EmailChanged || event is PasswordChanged) {
-      // You can add logic for validation here.
+  LoginBloc() : super(LoginInitial()){
+    on<LoginSubmitted>(_onLoginSubmitted);
+  }
+
+  // Event handler for LoginSubmitted
+  Future<void> _onLoginSubmitted(
+      LoginSubmitted event,
+      Emitter<LoginState> emit,
+      ) async {
+    emit(LoginLoading()); // Show loading spinner when API call starts
+
+    try {
+      // Make the API call for login
+      final response = await callLoginApi(event.email, event.password);
+
+      // Check the response
+      if (response != null && response.statusCode == 200) {
+        emit(LoginSuccess(response.data)); // Pass the response data to success state
+      } else {
+        emit(LoginFailure('Invalid credentials')); // Handle failure
+      }
+    } catch (e) {
+      emit(LoginFailure('An error occurred during login: ${e.toString()}'));
     }
+  }
 
-    if (event is LoginSubmitted) {
-      yield LoginLoading();
-      await Future.delayed(Duration(seconds: 2)); // Simulate network delay
+  callLoginApi(String email, String password) async {
+    final data = {
+      'username': email,
+      'password': password,
+    };
 
-      yield LoginSuccess(); // Change to LoginFailure if login fails
-    }
+    return await _apiService.post('auth/login', data: data);
   }
 }

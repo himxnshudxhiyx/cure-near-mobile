@@ -1,5 +1,7 @@
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,9 +11,27 @@ import '../../logic/login_screen/login_event.dart';
 import '../../logic/login_screen/login_state.dart';
 import '../../widgets/text_feild.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    if (kDebugMode){
+      _emailController.text = 'himanshu.44909@gmail.com';
+      _passwordController.text = 'Himanshu@';
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +42,7 @@ class LoginScreen extends StatelessWidget {
           listener: (context, state) {
             if (state is LoginSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Login Successful')),
+                const SnackBar(content: Text('Login Successful')),
               );
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -39,12 +59,21 @@ class LoginScreen extends StatelessWidget {
                   AppTextField(
                     hintText: "Email",
                     controller: _emailController,
-                    prefixIcon: Icon(Icons.email_outlined, color: Colors.grey.shade700,),
+                    prefixIcon: Icon(
+                      Icons.email_outlined,
+                      color: Colors.grey.shade700,
+                    ),
                     keyboardType: TextInputType.emailAddress,
                     filled: true,
+                    // obscureText: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
+                      }
+                      // Regular expression for basic email validation
+                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                      if (!emailRegex.hasMatch(value)) {
+                        return 'Please enter a valid email address';
                       }
                       return null;
                     },
@@ -55,26 +84,55 @@ class LoginScreen extends StatelessWidget {
                     controller: _passwordController,
                     obscureText: true,
                     filled: true,
-                    prefixIcon: Icon(Icons.lock_outline_rounded, color: Colors.grey.shade700,),
-                    suffixWidget: Icon(Icons.remove_red_eye_rounded, color: Colors.grey.shade700,),
+                    prefixIcon: Icon(
+                      Icons.lock_outline_rounded,
+                      color: Colors.grey.shade700,
+                    ),
+                    suffixWidget: Icon(
+                      Icons.remove_red_eye_rounded,
+                      color: Colors.grey.shade700,
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your password';
+                      }
+                      // Check for minimum 8 characters
+                      if (value.length < 8) {
+                        return 'Password must be at least 8 characters long';
+                      }
+                      // Check for at least one uppercase letter
+                      if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                        return 'Password must contain at least one uppercase letter';
+                      }
+                      // Check for at least one lowercase letter
+                      if (!RegExp(r'[a-z]').hasMatch(value)) {
+                        return 'Password must contain at least one lowercase letter';
+                      }
+                      // Check for at least one digit
+                      if (!RegExp(r'[0-9]').hasMatch(value)) {
+                        return 'Password must contain at least one digit';
+                      }
+                      // Check for at least one special character
+                      if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
+                        return 'Password must contain at least one special character';
                       }
                       return null;
                     },
                   ),
                   SizedBox(height: 30.sp),
+                  (state is LoginLoading) ? const CupertinoActivityIndicator() :
                   ElevatedButtonWidget(
                     onPressed: () {
-                      context.read<LoginBloc>().add(LoginSubmitted(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                          ));
+                      context.read<LoginBloc>().add(
+                        LoginSubmitted(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        ),
+                      );
                     },
                     text: 'Sign In',
                   ),
-                  if (state is LoginLoading) CircularProgressIndicator(),
+                  // if (state is LoginLoading) const CupertinoActivityIndicator(),
                   _signUpAndForgot(context),
                 ],
               );
@@ -149,12 +207,12 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               TextView(
+              TextView(
                 text: "Don't have account yet? ",
                 fontWeight: FontWeight.w500,
                 fontSize: 12,
               ),
-               TextView(
+              TextView(
                 text: "Sign Up",
                 fontWeight: FontWeight.w500,
                 fontSize: 12,

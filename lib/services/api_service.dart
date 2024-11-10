@@ -1,24 +1,47 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'package:http/http.dart' as http;
+
+import 'package:dio/dio.dart';
 
 class ApiService {
-  final String apiUrl = "https://jsonplaceholder.typicode.com/posts/";
+  final Dio _dio = Dio();
 
-  Future<List<Map<String, dynamic>>> fetchData() async {
-    var startTime = DateTime.now().millisecondsSinceEpoch;
-    final response = await http.get(Uri.parse(apiUrl));
+  ApiService() {
+    _dio.options.baseUrl = 'https://cure-near-backend.vercel.app/api/';
+    _dio.options.connectTimeout = const Duration(seconds: 10);
+    _dio.options.receiveTimeout = const Duration(seconds: 10);
+    _dio.options.headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+  }
 
-    if (response.statusCode == 200) {
-      var endTime = DateTime.now().millisecondsSinceEpoch;
-      log('API Function Fetch Time -> ${endTime - startTime} ms');
-      log('Response -> ${response.body}');
-      List<dynamic> jsonData = json.decode(response.body);  // Decode response as a list of dynamic objects
-      return jsonData.cast<Map<String, dynamic>>();  // Cast it to a List<Map<String, dynamic>>
-    } else {
-      throw Exception("Failed to load data");
+  // GET request
+  Future<Response?> get(String url, {Map<String, dynamic>? queryParameters}) async {
+    try {
+      log('*************** URL-> ***************\n$url');
+      log('*************** Request-> ***************\n$queryParameters');
+      final response = await _dio.get(url, queryParameters: queryParameters);
+      log('*************** Response-> ***************\n$response');
+      return response;
+    } on DioException catch (e) {
+      // Handle errors here
+      log('GET request error: ${e.message}');
+      return e.response;
+    }
+  }
+
+  // POST request
+  Future<Response?> post(String url, {Map<String, dynamic>? data}) async {
+    try {
+      log('*************** URL-> ***************\n$url');
+      log('*************** Request-> ***************\n$data');
+      final response = await _dio.post(url, data: data);
+      log('*************** Response-> ***************\n$response');
+      return response;
+    } on DioException catch (e) {
+      // Handle errors here
+      log('POST request error: ${e.message}');
+      return e.response;
     }
   }
 }
-
-
