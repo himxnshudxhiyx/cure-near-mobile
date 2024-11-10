@@ -1,3 +1,4 @@
+import 'package:cure_near/ui/login_screen/login_screen.dart';
 import 'package:cure_near/ui/on_boarding_screen/on_boarding_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,6 +40,16 @@ final GoRouter router = GoRouter(
           return CustomTransitionPage(
             key: state.pageKey,
             child: const OnBoardingScreen(),
+            transitionsBuilder: commonTransition,
+          );
+        },
+    ),
+    GoRoute(
+      path: '/login',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: LoginScreen(),
             transitionsBuilder: commonTransition,
           );
         },

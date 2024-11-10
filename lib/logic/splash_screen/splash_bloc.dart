@@ -17,10 +17,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _onCheckUserSession(CheckUserSession event, Emitter<SplashState> emit) async {
     try {
       bool? isFirstTime = await _checkOnboarding();
-      Future.delayed(const Duration(seconds: 5)).then(
+      Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           if (isFirstTime == true || isFirstTime == null) {
-            goRouter.go('/onBoarding'); // Navigate to the welcome or onboarding screen
+            goRouter.go('/login'); // Navigate to the welcome or onboarding screen
           } else {
             // _checkUserStatus();
           }
