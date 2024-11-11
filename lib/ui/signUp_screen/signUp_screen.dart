@@ -7,20 +7,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../logic/login_screen/login_bloc.dart';
-import '../../logic/login_screen/login_event.dart';
-import '../../logic/login_screen/login_state.dart';
+import '../../logic/signUp_screen/signUp_bloc.dart';
+import '../../logic/signUp_screen/signUp_event.dart';
+import '../../logic/signUp_screen/signUp_state.dart';
 import '../../widgets/text_feild.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -36,24 +38,42 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: BlocListener<LoginBloc, LoginState>(
+        child: BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
-            if (state is LoginSuccess) {
+            if (state is SignUpSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Login Successful')),
+                const SnackBar(content: Text('SignUp Successful')),
               );
-            } else if (state is LoginFailure) {
+            } else if (state is SignUpFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Login Failed: ${state.errorMessage}')),
+                SnackBar(content: Text('SignUp Failed: ${state.errorMessage}')),
               );
             }
           },
-          child: BlocBuilder<LoginBloc, LoginState>(
+          child: BlocBuilder<SignUpBloc, SignUpState>(
             builder: (context, state) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _welcomeView(context),
+                  AppTextField(
+                    hintText: "Name",
+                    controller: _nameController,
+                    prefixIcon: Icon(
+                      Icons.person_2_outlined,
+                      color: Colors.grey.shade700,
+                    ),
+                    keyboardType: TextInputType.name,
+                    filled: true,
+                    // obscureText: false,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.sp),
                   AppTextField(
                     hintText: "Email",
                     controller: _emailController,
@@ -63,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     keyboardType: TextInputType.emailAddress,
                     filled: true,
-                    // obscureText: false,
+                    obscureText: false,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
@@ -118,21 +138,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   SizedBox(height: 30.sp),
-                  (state is LoginLoading)
+                  (state is SignUpLoading)
                       ? const CupertinoActivityIndicator()
                       : ElevatedButtonWidget(
                           onPressed: () {
-                            context.read<LoginBloc>().add(
-                                  LoginSubmitted(
+                            context.read<SignUpBloc>().add(
+                                  SignUpSubmitted(
                                     email: _emailController.text,
                                     password: _passwordController.text,
                                   ),
                                 );
                           },
-                          text: 'Sign In',
+                          text: 'Create Account',
                         ),
-                  // if (state is LoginLoading) const CupertinoActivityIndicator(),
-                  _signUpAndForgot(context),
+                  // if (state is SignUpLoading) const CupertinoActivityIndicator(),
+                  _signInView(context),
                 ],
               );
             },
@@ -164,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 30.sp,
           ),
           const TextView(
-            text: "Hi, Welcome Back!",
+            text: "Create Account",
             fontWeight: FontWeight.w500,
             fontSize: 20,
           ),
@@ -172,33 +192,33 @@ class _LoginScreenState extends State<LoginScreen> {
             height: 6.sp,
           ),
           TextView(
-            text: "Hope you are doing fine.",
+            text: "We are here to help you!",
             fontWeight: FontWeight.w300,
             fontSize: 16,
             fontColor: Colors.grey.shade500,
           ),
           SizedBox(
-            height: 18.sp,
+            height: 20.sp,
           ),
         ],
       ),
     );
   }
 
-  Widget _signUpAndForgot(context) {
-    return BlocListener<LoginBloc, LoginState>(
+  Widget _signInView(context) {
+    return BlocListener<SignUpBloc, SignUpState>(
       listener: (context, state) {
-        if (state is LoginSuccess) {
+        if (state is SignUpSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login Successful')),
+            const SnackBar(content: Text('SignUp Successful')),
           );
-        } else if (state is LoginFailure) {
+        } else if (state is SignUpFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login Failed: ${state.errorMessage}')),
+            SnackBar(content: Text('SignUp Failed: ${state.errorMessage}')),
           );
         }
       },
-      child: BlocBuilder<LoginBloc, LoginState>(
+      child: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
           return SizedBox(
             width: MediaQuery.sizeOf(context).width,
@@ -207,30 +227,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 30.sp,
                 ),
-                const TextView(
-                  text: "Forgot password?",
-                  // fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                  fontColor: Colors.blue,
-                ),
-                SizedBox(
-                  height: 16.sp,
-                ),
+                // const TextView(
+                //   text: "Forgot password?",
+                //   // fontWeight: FontWeight.w500,
+                //   fontSize: 15,
+                //   fontColor: Colors.blue,
+                // ),
+                // SizedBox(
+                //   height: 16.sp,
+                // ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const TextView(
-                      text: "Don't have account yet? ",
+                      text: "Already have an account? ",
                       fontWeight: FontWeight.w500,
                       fontSize: 12,
                     ),
                     InkWell(
                       onTap: () {
-                        context.push('/signUp');
+                        context.pop();
                       },
                       child: const TextView(
-                        text: "Sign Up",
+                        text: "Sign in",
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
                         fontColor: Colors.blue,

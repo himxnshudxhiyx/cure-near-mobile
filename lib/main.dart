@@ -1,4 +1,5 @@
 import 'package:cure_near/logic/login_screen/login_bloc.dart';
+import 'package:cure_near/logic/signUp_screen/signUp_bloc.dart';
 import 'package:cure_near/logic/splash_screen/splash_bloc.dart';
 import 'package:cure_near/routes/go_route.dart';
 import 'package:cure_near/services/shared_preferences.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(),
+        ),
+        BlocProvider<SignUpBloc>(
+          create: (context) => SignUpBloc(),
         ),
       ],
       child: ScreenUtilInit(

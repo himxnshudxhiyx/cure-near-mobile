@@ -1,5 +1,6 @@
 import 'package:cure_near/ui/login_screen/login_screen.dart';
 import 'package:cure_near/ui/on_boarding_screen/on_boarding_screen.dart';
+import 'package:cure_near/ui/signUp_screen/signUp_screen.dart';
 import 'package:go_router/go_router.dart';
 
 import '../ui/splash_screen/splash_screen.dart';
@@ -49,7 +50,17 @@ final GoRouter router = GoRouter(
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             key: state.pageKey,
-            child: LoginScreen(),
+            child: const LoginScreen(),
+            transitionsBuilder: commonTransition,
+          );
+        },
+    ),
+    GoRoute(
+      path: '/signUp',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const SignUpScreen(),
             transitionsBuilder: commonTransition,
           );
         },
