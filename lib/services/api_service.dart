@@ -12,7 +12,6 @@ class ApiService {
     _dio.options.headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjczZjViM2ZjZDc4ZDc2ZmNlY2YwMDhhIiwidXNlcm5hbWUiOiJoaW1hbnNodS40NDkwOUBnbWFpbC5jb20ifSwiaWF0IjoxNzMyMjE1MDE4LCJleHAiOjE3MzQ4MDcwMTh9.CpvrD8MUYrmIcCpUmOMANy4-1u-A3BXt6kzkM9wJRsM',
     };
   }
 
