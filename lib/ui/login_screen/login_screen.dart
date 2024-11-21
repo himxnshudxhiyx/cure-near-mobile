@@ -42,6 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Login Successful')),
               );
+              final isProfileSetup = state.data['isProfileSetup'] ?? false;
+              if (isProfileSetup) {
+                // GoRouter.of(context).go('/home');
+              } else {
+                context.push('/profileSetup');
+              }
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Login Failed: ${state.errorMessage}')),
@@ -50,90 +56,92 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           child: BlocBuilder<LoginBloc, LoginState>(
             builder: (context, state) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _welcomeView(context),
-                  AppTextField(
-                    hintText: "Email",
-                    controller: _emailController,
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: Colors.grey.shade700,
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _welcomeView(context),
+                    AppTextField(
+                      hintText: "Email",
+                      controller: _emailController,
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: Colors.grey.shade700,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      filled: true,
+                      // obscureText: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        // Regular expression for basic email validation
+                        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    filled: true,
-                    // obscureText: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      // Regular expression for basic email validation
-                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                      if (!emailRegex.hasMatch(value)) {
-                        return 'Please enter a valid email address';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 16.sp),
-                  AppTextField(
-                    hintText: "Password",
-                    controller: _passwordController,
-                    obscureText: true,
-                    filled: true,
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color: Colors.grey.shade700,
+                    SizedBox(height: 16.sp),
+                    AppTextField(
+                      hintText: "Password",
+                      controller: _passwordController,
+                      obscureText: true,
+                      filled: true,
+                      prefixIcon: Icon(
+                        Icons.lock_outline_rounded,
+                        color: Colors.grey.shade700,
+                      ),
+                      suffixWidget: Icon(
+                        Icons.remove_red_eye_rounded,
+                        color: Colors.grey.shade700,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        // Check for minimum 8 characters
+                        if (value.length < 8) {
+                          return 'Password must be at least 8 characters long';
+                        }
+                        // Check for at least one uppercase letter
+                        if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                          return 'Password must contain at least one uppercase letter';
+                        }
+                        // Check for at least one lowercase letter
+                        if (!RegExp(r'[a-z]').hasMatch(value)) {
+                          return 'Password must contain at least one lowercase letter';
+                        }
+                        // Check for at least one digit
+                        if (!RegExp(r'[0-9]').hasMatch(value)) {
+                          return 'Password must contain at least one digit';
+                        }
+                        // Check for at least one special character
+                        if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
+                          return 'Password must contain at least one special character';
+                        }
+                        return null;
+                      },
                     ),
-                    suffixWidget: Icon(
-                      Icons.remove_red_eye_rounded,
-                      color: Colors.grey.shade700,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      // Check for minimum 8 characters
-                      if (value.length < 8) {
-                        return 'Password must be at least 8 characters long';
-                      }
-                      // Check for at least one uppercase letter
-                      if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                        return 'Password must contain at least one uppercase letter';
-                      }
-                      // Check for at least one lowercase letter
-                      if (!RegExp(r'[a-z]').hasMatch(value)) {
-                        return 'Password must contain at least one lowercase letter';
-                      }
-                      // Check for at least one digit
-                      if (!RegExp(r'[0-9]').hasMatch(value)) {
-                        return 'Password must contain at least one digit';
-                      }
-                      // Check for at least one special character
-                      if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                        return 'Password must contain at least one special character';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 30.sp),
-                  (state is LoginLoading)
-                      ? const CupertinoActivityIndicator()
-                      : ElevatedButtonWidget(
-                          onPressed: () {
-                            context.read<LoginBloc>().add(
-                                  LoginSubmitted(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                  ),
-                                );
-                          },
-                          text: 'Sign In',
-                        ),
-                  // if (state is LoginLoading) const CupertinoActivityIndicator(),
-                  _signUpAndForgot(context),
-                ],
+                    SizedBox(height: 30.sp),
+                    (state is LoginLoading)
+                        ? const CupertinoActivityIndicator()
+                        : ElevatedButtonWidget(
+                            onPressed: () {
+                              context.read<LoginBloc>().add(
+                                    LoginSubmitted(
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                    ),
+                                  );
+                            },
+                            text: 'Sign In',
+                          ),
+                    // if (state is LoginLoading) const CupertinoActivityIndicator(),
+                    _signUpAndForgot(context),
+                  ],
+                ),
               );
             },
           ),
@@ -188,15 +196,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _signUpAndForgot(context) {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        if (state is LoginSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login Successful')),
-          );
-        } else if (state is LoginFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Login Failed: ${state.errorMessage}')),
-          );
-        }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {

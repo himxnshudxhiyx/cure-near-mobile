@@ -52,108 +52,111 @@ class _SignUpScreenState extends State<SignUpScreen> {
           },
           child: BlocBuilder<SignUpBloc, SignUpState>(
             builder: (context, state) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  _welcomeView(context),
-                  AppTextField(
-                    hintText: "Name",
-                    controller: _nameController,
-                    prefixIcon: Icon(
-                      Icons.person_2_outlined,
-                      color: Colors.grey.shade700,
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _welcomeView(context),
+                    AppTextField(
+                      hintText: "Name",
+                      controller: _nameController,
+                      prefixIcon: Icon(
+                        Icons.person_2_outlined,
+                        color: Colors.grey.shade700,
+                      ),
+                      keyboardType: TextInputType.name,
+                      filled: true,
+                      // obscureText: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
                     ),
-                    keyboardType: TextInputType.name,
-                    filled: true,
-                    // obscureText: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 16.sp),
-                  AppTextField(
-                    hintText: "Email",
-                    controller: _emailController,
-                    prefixIcon: Icon(
-                      Icons.email_outlined,
-                      color: Colors.grey.shade700,
+                    SizedBox(height: 16.sp),
+                    AppTextField(
+                      hintText: "Email",
+                      controller: _emailController,
+                      prefixIcon: Icon(
+                        Icons.email_outlined,
+                        color: Colors.grey.shade700,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      filled: true,
+                      obscureText: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        // Regular expression for basic email validation
+                        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                        if (!emailRegex.hasMatch(value)) {
+                          return 'Please enter a valid email address';
+                        }
+                        return null;
+                      },
                     ),
-                    keyboardType: TextInputType.emailAddress,
-                    filled: true,
-                    obscureText: false,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      // Regular expression for basic email validation
-                      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-                      if (!emailRegex.hasMatch(value)) {
-                        return 'Please enter a valid email address';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 16.sp),
-                  AppTextField(
-                    hintText: "Password",
-                    controller: _passwordController,
-                    obscureText: true,
-                    filled: true,
-                    prefixIcon: Icon(
-                      Icons.lock_outline_rounded,
-                      color: Colors.grey.shade700,
+                    SizedBox(height: 16.sp),
+                    AppTextField(
+                      hintText: "Password",
+                      controller: _passwordController,
+                      obscureText: true,
+                      filled: true,
+                      prefixIcon: Icon(
+                        Icons.lock_outline_rounded,
+                        color: Colors.grey.shade700,
+                      ),
+                      suffixWidget: Icon(
+                        Icons.remove_red_eye_rounded,
+                        color: Colors.grey.shade700,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        // Check for minimum 8 characters
+                        if (value.length < 8) {
+                          return 'Password must be at least 8 characters long';
+                        }
+                        // Check for at least one uppercase letter
+                        if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                          return 'Password must contain at least one uppercase letter';
+                        }
+                        // Check for at least one lowercase letter
+                        if (!RegExp(r'[a-z]').hasMatch(value)) {
+                          return 'Password must contain at least one lowercase letter';
+                        }
+                        // Check for at least one digit
+                        if (!RegExp(r'[0-9]').hasMatch(value)) {
+                          return 'Password must contain at least one digit';
+                        }
+                        // Check for at least one special character
+                        if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
+                          return 'Password must contain at least one special character';
+                        }
+                        return null;
+                      },
                     ),
-                    suffixWidget: Icon(
-                      Icons.remove_red_eye_rounded,
-                      color: Colors.grey.shade700,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      // Check for minimum 8 characters
-                      if (value.length < 8) {
-                        return 'Password must be at least 8 characters long';
-                      }
-                      // Check for at least one uppercase letter
-                      if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                        return 'Password must contain at least one uppercase letter';
-                      }
-                      // Check for at least one lowercase letter
-                      if (!RegExp(r'[a-z]').hasMatch(value)) {
-                        return 'Password must contain at least one lowercase letter';
-                      }
-                      // Check for at least one digit
-                      if (!RegExp(r'[0-9]').hasMatch(value)) {
-                        return 'Password must contain at least one digit';
-                      }
-                      // Check for at least one special character
-                      if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                        return 'Password must contain at least one special character';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 30.sp),
-                  (state is SignUpLoading)
-                      ? const CupertinoActivityIndicator()
-                      : ElevatedButtonWidget(
-                          onPressed: () {
-                            context.read<SignUpBloc>().add(
-                                  SignUpSubmitted(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                  ),
-                                );
-                          },
-                          text: 'Create Account',
-                        ),
-                  // if (state is SignUpLoading) const CupertinoActivityIndicator(),
-                  _signInView(context),
-                ],
+                    SizedBox(height: 30.sp),
+                    (state is SignUpLoading)
+                        ? const CupertinoActivityIndicator()
+                        : ElevatedButtonWidget(
+                            onPressed: () {
+                              context.read<SignUpBloc>().add(
+                                    SignUpSubmitted(
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                      fullName: _nameController.text,
+                                    ),
+                                  );
+                            },
+                            text: 'Create Account',
+                          ),
+                    // if (state is SignUpLoading) const CupertinoActivityIndicator(),
+                    _signInView(context),
+                  ],
+                ),
               );
             },
           ),
@@ -207,17 +210,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _signInView(context) {
     return BlocListener<SignUpBloc, SignUpState>(
-      listener: (context, state) {
-        if (state is SignUpSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('SignUp Successful')),
-          );
-        } else if (state is SignUpFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('SignUp Failed: ${state.errorMessage}')),
-          );
-        }
-      },
+      listener: (context, state) {},
       child: BlocBuilder<SignUpBloc, SignUpState>(
         builder: (context, state) {
           return SizedBox(
@@ -227,15 +220,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 30.sp,
                 ),
-                // const TextView(
-                //   text: "Forgot password?",
-                //   // fontWeight: FontWeight.w500,
-                //   fontSize: 15,
-                //   fontColor: Colors.blue,
-                // ),
-                // SizedBox(
-                //   height: 16.sp,
-                // ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,

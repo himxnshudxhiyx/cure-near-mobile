@@ -13,6 +13,14 @@ class EmailChanged extends SignUpEvent {
   @override
   List<Object> get props => [email];
 }
+class NameChanged extends SignUpEvent {
+  final String fullName;
+
+  NameChanged(this.fullName);
+
+  @override
+  List<Object> get props => [fullName];
+}
 
 class PasswordChanged extends SignUpEvent {
   final String password;
@@ -26,9 +34,10 @@ class PasswordChanged extends SignUpEvent {
 class SignUpSubmitted extends SignUpEvent {
   final String email;
   final String password;
+  final String fullName;
 
-  SignUpSubmitted({required this.email, required this.password});
+  SignUpSubmitted({required this.email, required this.password, required this.fullName});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email, password, fullName];
 }

@@ -20,7 +20,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       Future.delayed(const Duration(seconds: 1)).then(
         (value) {
           if (isFirstTime == true || isFirstTime == null) {
-            goRouter.go('/login'); // Navigate to the welcome or onboarding screen
+            // goRouter.go('/login'); // Navigate to the welcome or onboarding screen
+            goRouter.go('/profileSetup'); // Navigate to the welcome or onboarding screen
           } else {
             // _checkUserStatus();
           }

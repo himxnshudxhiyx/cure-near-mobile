@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cure_near/logic/signUp_screen/signUp_event.dart';
 import 'package:cure_near/logic/signUp_screen/signUp_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,27 +18,28 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       SignUpSubmitted event,
       Emitter<SignUpState> emit,
       ) async {
-    emit(SignUpLoading()); // Show loading spinner when API call starts
+    emit(SignUpLoading());
 
     try {
       // Make the API call for SignUp
-      final response = await callSignUpApi(event.email, event.password);
+      final response = await callSignUpApi(event.email, event.password, event.fullName);
 
       // Check the response
       if (response != null && response.statusCode == 200) {
-        emit(SignUpSuccess(response.data)); // Pass the response data to success state
+        emit(SignUpSuccess(response.data));
       } else {
-        emit(SignUpFailure('Invalid credentials')); // Handle failure
+        emit(SignUpFailure('${response.data['message']}'));
       }
     } catch (e) {
       emit(SignUpFailure('An error occurred during SignUp: ${e.toString()}'));
     }
   }
 
-  callSignUpApi(String email, String password) async {
+  callSignUpApi(String email, String password, String fullName) async {
     final data = {
       'username': email,
       'password': password,
+      'fullname': fullName,
     };
 
     return await _apiService.post('auth/SignUp', data: data);

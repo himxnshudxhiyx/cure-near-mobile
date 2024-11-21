@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTextField extends StatefulWidget {
   final String? labelText;
@@ -75,11 +77,22 @@ class _AppTextFieldState extends State<AppTextField> {
       obscureText: _isObscured,
       validator: widget.validator,
       keyboardType: widget.keyboardType,
+      style: TextStyle(
+          fontSize: 16.sp,
+          color: Colors.grey.shade700,
+          fontFamily: GoogleFonts.poppins()
+              .fontFamily,
+          fontWeight:  FontWeight.w500
+      ),
       inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
         hintText: widget.hintText,
         hintStyle: TextStyle(
-          color: Colors.grey.shade700,
+            fontSize: 16.sp,
+            color: Colors.grey.shade700,
+            fontFamily: GoogleFonts.poppins()
+                .fontFamily,
+            fontWeight:  FontWeight.w500
         ),
         labelText: widget.labelText,
         fillColor: widget.fillColor ?? Colors.grey.shade200,

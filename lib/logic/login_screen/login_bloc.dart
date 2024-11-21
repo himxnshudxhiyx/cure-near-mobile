@@ -24,9 +24,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       // Check the response
       if (response != null && response.statusCode == 200) {
-        emit(LoginSuccess(response.data)); // Pass the response data to success state
+        emit(LoginSuccess(response.data));
       } else {
-        emit(LoginFailure('Invalid credentials')); // Handle failure
+        emit(LoginFailure('Invalid credentials'));
       }
     } catch (e) {
       emit(LoginFailure('An error occurred during login: ${e.toString()}'));
