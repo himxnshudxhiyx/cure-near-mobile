@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cure_near/logic/profile_setup_screen/profile_setup_event.dart';
 import 'package:cure_near/logic/profile_setup_screen/profile_setup_state.dart';
+import 'package:cure_near/services/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../services/api_service.dart';
@@ -14,7 +15,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       (event, emit) async {
         emit(ProfileLoading());
         try {
-          final response = await _apiService.get('auth/checkUser');
+          final response = await _apiService.get('auth/checkUser', auth: true);
           if (response != null && response.statusCode == 200) {
             final data = response.data;
             emit(ProfileSuccess(
@@ -58,8 +59,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(ProfileLoading());
 
         try {
-          // Simulate a network call
-          await Future.delayed(const Duration(seconds: 2));
+          // // Simulate a network call
+          // await Future.delayed(const Duration(seconds: 2));
+
+          String userId = SharedPrefsHelper().getString('userId') ?? '';
+          final response = await callProfileSetupApi(event.phoneNumber.toString(), event.dateOfBirth.toString(), event.gender.toString(), userId);
+
+          // Check the response
+          if (response != null && response.statusCode == 200) {
+            // emit(SignUpSuccess(response.data));
+          } else {
+            emit(ProfileFailure('Failed to update profile: ${response.data['message']}'));
+          }
 
           emit(ProfileUpdated());
         } catch (error) {
@@ -68,4 +79,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       },
     );
   }
+
+  callProfileSetupApi(String phoneNumber, String dateOfBirth, String gender, String userId) async {
+    final data = {
+      'phoneNumber': phoneNumber,
+      'dateOfBirth': dateOfBirth,
+      'gender': gender,
+      'userId': userId,
+    };
+
+    return await _apiService.post('auth/profile-setup', data: data);
+  }
+
 }

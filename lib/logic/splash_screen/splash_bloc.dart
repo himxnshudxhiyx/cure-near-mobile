@@ -2,12 +2,14 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../services/api_service.dart';
 import '../../services/shared_preferences.dart';
 import 'splash_event.dart';
 import 'splash_state.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final GoRouter goRouter; // Pass GoRouter as a dependency
+  final ApiService _apiService = ApiService();
 
   SplashBloc(this.goRouter) : super(SplashInitial()) {
     on<CheckUserSession>(_onCheckUserSession);
@@ -17,16 +19,15 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _onCheckUserSession(CheckUserSession event, Emitter<SplashState> emit) async {
     try {
       bool? isFirstTime = await _checkOnboarding();
-      Future.delayed(const Duration(seconds: 1)).then(
-        (value) {
+      // Future.delayed(const Duration(seconds: 1)).then(
+      //   (value) {
           if (isFirstTime == true || isFirstTime == null) {
-            // goRouter.go('/login'); // Navigate to the welcome or onboarding screen
-            goRouter.go('/profileSetup'); // Navigate to the welcome or onboarding screen
+            goRouter.go('/onBoarding');
           } else {
-            // _checkUserStatus();
+            _checkUserStatus();
           }
-        },
-      );
+        // },
+      // );
     } catch (e) {
       emit(SplashError("Failed to check user session."));
     }
@@ -45,14 +46,25 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   }
 
   /// Simulated session check (replace with actual authentication logic).
-  Future<bool?> _checkUserStatus() async {
+  void _checkUserStatus() async {
     try {
-      goRouter.go('/home'); // Navigate to the home screen for existing users
-      return true;
+      if (   SharedPrefsHelper().getString("authToken") != null ||  SharedPrefsHelper().getString("authToken") != ''){
+        final response = await _apiService.get('auth/checkUser', auth: true);
+        if (response != null && response.statusCode == 200) {
+          if (response.data['user']['isProfileSetup'] == true) {
+            goRouter.go('/home');
+          } else {
+            goRouter.go('/profileSetup');
+          }
+        } else {
+          goRouter.go('/login');
+          log('Failed to fetch user details');
+        }
+      }
     } catch (e, stack) {
       log('Error----->>>>>$e');
       log('Stack----->>>>>$stack');
-      return null;
+      goRouter.go('/login');
     }
   }
 }

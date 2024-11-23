@@ -16,6 +16,7 @@ class AppTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final Color? fillColor;
   final bool? filled;
+  final bool? enabled;
 
   const AppTextField({
     super.key,
@@ -31,6 +32,7 @@ class AppTextField extends StatefulWidget {
     this.validator,
     this.fillColor,
     this.filled,
+    this.enabled,
   });
 
   @override
@@ -72,6 +74,7 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.enabled ?? true,
       controller: widget.controller,
       maxLines: widget.maxLines ?? 1,
       obscureText: _isObscured,

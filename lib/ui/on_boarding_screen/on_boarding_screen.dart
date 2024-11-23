@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import '../../logic/on_boarding_screen/onboarding_bloc.dart';
 import '../../logic/on_boarding_screen/onboarding_event.dart';
 import '../../logic/on_boarding_screen/onboarding_state.dart';
+import '../../services/shared_preferences.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -27,7 +30,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         body: BlocConsumer<OnboardingBloc, OnboardingState>(
           listener: (context, state) {
             if (state is OnboardingComplete) {
-              context.go('/login');
+              try {
+                SharedPrefsHelper().setBool("isFirstTime", false);
+                context.go('/login');
+              } catch (e, stack) {
+                log('Error--->>> $e');
+                log('Stack--->>> $stack');
+              }
             }
           },
           builder: (context, state) {

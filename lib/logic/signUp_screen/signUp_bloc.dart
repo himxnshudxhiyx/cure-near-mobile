@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cure_near/logic/signUp_screen/signUp_event.dart';
 import 'package:cure_near/logic/signUp_screen/signUp_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

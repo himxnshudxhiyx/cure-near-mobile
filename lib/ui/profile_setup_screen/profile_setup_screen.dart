@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,6 +51,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               child: Column(
                 children: [
                   AppTextField(
+                    enabled: false,
                     hintText: 'Full Name',
                     controller: nameController,
                     prefixIcon: Icon(
@@ -72,6 +71,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   SizedBox(height: 16.sp),
                   AppTextField(
                     hintText: 'Email',
+                    enabled: false,
                     controller: emailController,
                     prefixIcon: Icon(
                       Icons.email_outlined,

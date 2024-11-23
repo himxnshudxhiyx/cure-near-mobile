@@ -1,3 +1,4 @@
+import 'package:cure_near/services/shared_preferences.dart';
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -42,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Login Successful')),
               );
-              final isProfileSetup = state.data['isProfileSetup'] ?? false;
+              final isProfileSetup = state.data['user']['isProfileSetup'] ?? false;
+              SharedPrefsHelper().setString('authToken', state.data['authToken']);
               if (isProfileSetup) {
                 // GoRouter.of(context).go('/home');
               } else {

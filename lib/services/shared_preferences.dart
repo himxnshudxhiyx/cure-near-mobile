@@ -3,9 +3,8 @@ import 'dart:developer';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsHelper {
-
   // Initialize shared preferences instance
-   SharedPreferences? _prefs;
+  static SharedPreferences? _prefs;
 
   Future<void> initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
@@ -33,7 +32,13 @@ class SharedPrefsHelper {
 
   /// Set a boolean value in shared preferences
   Future<void> setBool(String key, bool value) async {
-    await _prefs?.setBool(key, value);
+    try {
+      await _prefs?.setBool(key, value);
+      var result = _prefs?.getBool('isFirstTime');
+      log('Result ->>>> ${result.toString()}');
+    } catch (e) {
+      log('Error in Shared Preferences --->>> ${e.toString()}');
+    }
   }
 
   /// Get a boolean value from shared preferences
