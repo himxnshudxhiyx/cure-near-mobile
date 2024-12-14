@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cure_near/services/logger_service.dart';
 import 'package:cure_near/services/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -19,9 +20,6 @@ class ApiService {
   // GET request
   Future<Response?> get(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? data, bool? auth}) async {
     try {
-      log('*************** URL-> ***************\n$url');
-      log('*************** Request-> ***************\n$queryParameters');
-      log('*************** Request-> ***************\n$data');
       final response = await _dio.get(
         url,
         queryParameters: queryParameters,
@@ -34,9 +32,10 @@ class ApiService {
               )
             : null,
       );
-      log('*************** Response-> ***************\n$response');
+      Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: response);
       return response;
     } on DioException catch (e) {
+      Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: e.error);
       // Handle errors here
       log('GET request error: ${e.message}');
       return e.response;
@@ -46,8 +45,6 @@ class ApiService {
   // POST request
   Future<Response?> post(String url, {Map<String, dynamic>? data, bool? auth}) async {
     try {
-      log('*************** URL-> ***************\n$url');
-      log('*************** Request-> ***************\n$data');
       final response = await _dio.post(
         url,
         data: data,
@@ -59,9 +56,10 @@ class ApiService {
               )
             : null,
       );
-      log('*************** Response-> ***************\n$response');
+      Logger.logAPIResponse(methodName: 'Post', webLink: url, request: data, response: response);
       return response;
     } on DioException catch (e) {
+      Logger.logAPIResponse(methodName: 'Post', webLink: url, request: data, response: e.error);
       // Handle errors here
       log('POST request error: ${e.message}');
       return e.response;

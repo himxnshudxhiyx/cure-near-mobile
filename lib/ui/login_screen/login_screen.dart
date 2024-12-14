@@ -45,7 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
               );
               final isProfileSetup = state.data['user']['isProfileSetup'] ?? false;
               SharedPrefsHelper().setString('authToken', state.data['authToken']);
+              SharedPrefsHelper().setString('userId', state.data['user']['_id']);
               if (isProfileSetup) {
+                context.push('/home');
                 // GoRouter.of(context).go('/home');
               } else {
                 context.push('/profileSetup');

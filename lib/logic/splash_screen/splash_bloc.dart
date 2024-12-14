@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/api_service.dart';
 import '../../services/shared_preferences.dart';
 import 'splash_event.dart';
@@ -50,6 +51,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     try {
       if (   SharedPrefsHelper().getString("authToken") != null ||  SharedPrefsHelper().getString("authToken") != ''){
         final response = await _apiService.get('auth/checkUser', auth: true);
+        ///if want to force logout
+        // response?.statusCode = 100;
         if (response != null && response.statusCode == 200) {
           if (response.data['user']['isProfileSetup'] == true) {
             goRouter.go('/home');
@@ -57,6 +60,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
             goRouter.go('/profileSetup');
           }
         } else {
+          SharedPrefsHelper().clearAll();
           goRouter.go('/login');
           log('Failed to fetch user details');
         }

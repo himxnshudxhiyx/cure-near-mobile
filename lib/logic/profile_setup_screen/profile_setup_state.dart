@@ -43,8 +43,11 @@ class ProfileUpdated extends ProfileState {}
 
 class ProfileFailure extends ProfileState {
   final String errorMessage;
+  final String gender;
 
-  ProfileFailure(this.errorMessage);
+  ProfileFailure(this.errorMessage, {this.gender = ''});
 
-  List<Object> get props => [errorMessage];
+  List<Object?> get props => [errorMessage, gender];
 }
+
+class ProfileRefreshing extends ProfileState {}

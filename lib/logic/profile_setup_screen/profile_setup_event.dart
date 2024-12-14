@@ -30,6 +30,10 @@ class GenderChanged extends ProfileEvent {
   GenderChanged(this.gender);
 }
 
+class ProfilePageRefresh extends ProfileEvent {
+}
+
+
 class ProfileSubmitted extends ProfileEvent {
   final String? name;
   final String? email;

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../logic/profile_setup_screen/profile_setup_bloc.dart';
 import '../../logic/profile_setup_screen/profile_setup_event.dart';
@@ -22,6 +26,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController genderTextController = TextEditingController();
+  final TextEditingController dateOfBirthTextController = TextEditingController();
+  final TextEditingController dateOfBirthTextControllerView = TextEditingController();
 
   @override
   void initState() {
@@ -32,7 +39,13 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        log('Listener triggered: $state');
+        if (state is ProfileUpdated) {
+          // Perform navigation here
+          GoRouter.of(context).push('/home');
+        }
+      },
       builder: (context, state) {
         if (state is ProfileSuccess) {
           nameController.text = state.name;
@@ -126,7 +139,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         lastDate: DateTime.now(),
                       );
                       if (selectedDate != null) {
-                        context.read<ProfileBloc>().add(DateOfBirthChanged(selectedDate));
+                        context.read<ProfileBloc>().add(ProfilePageRefresh());
+                        dateOfBirthTextControllerView.text = selectedDate.toLocal().toString().split(' ')[0];
+                        dateOfBirthTextController.text = selectedDate.toString();
                       }
                     },
                     child: InputDecorator(
@@ -156,7 +171,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         ),
                       ),
                       child: TextView(
-                        text: state is ProfileSuccess && state.dateOfBirth != null ? state.dateOfBirth!.toLocal().toString().split(' ')[0] : 'Date of Birth',
+                        text: dateOfBirthTextControllerView.text != '' ? dateOfBirthTextControllerView.text : 'Date of Birth',
                       ),
                     ),
                   ),
@@ -171,7 +186,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                SizedBox(height: 16.sp,),
+                                SizedBox(
+                                  height: 16.sp,
+                                ),
                                 Container(
                                   height: 6.sp,
                                   width: 50.sp,
@@ -209,7 +226,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       );
 
                       if (selectedValue != null) {
-                        context.read<ProfileBloc>().add(GenderChanged(selectedValue));
+                        context.read<ProfileBloc>().add(ProfilePageRefresh());
+                        genderTextController.text = selectedValue;
                       }
                     },
                     child: Container(
@@ -225,8 +243,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextView(
-                            text: state is ProfileSuccess && state.gender.isNotEmpty ? state.gender : 'Gender',
-                            fontColor: state is ProfileSuccess && state.gender.isNotEmpty ? Colors.black : Colors.grey,
+                            text: genderTextController.text != '' ? genderTextController.text : 'Gender',
+                            fontColor: genderTextController.text != '' ? Colors.black : Colors.grey,
                           ),
                           const Icon(Icons.arrow_drop_down),
                         ],
@@ -239,7 +257,24 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                       : ElevatedButtonWidget(
                           onPressed: () {
                             FocusManager.instance.primaryFocus?.unfocus();
-                            context.read<ProfileBloc>().add(ProfileSubmitted(email: emailController.text, gender:state is ProfileSuccess && state.gender.isNotEmpty ? state.gender : '', name: nameController.text, phoneNumber: phoneNumberController.text, dateOfBirth: state is ProfileSuccess && state.dateOfBirth != null ? state.dateOfBirth : DateTime.now() ));
+                            if (phoneNumberController.text == '') {
+                              Fluttertoast.showToast(msg: 'Phone Number is required!');
+                              return;
+                            }
+                            if (dateOfBirthTextController.text == '') {
+                              Fluttertoast.showToast(msg: 'Date of Birth is required!');
+                              return;
+                            }
+                            if (genderTextController.text == '') {
+                              Fluttertoast.showToast(msg: 'Gender is required!');
+                              return;
+                            }
+                            context.read<ProfileBloc>().add(ProfileSubmitted(
+                                email: emailController.text,
+                                gender: genderTextController.text,
+                                name: nameController.text,
+                                phoneNumber: phoneNumberController.text,
+                                dateOfBirth: DateTime.tryParse(dateOfBirthTextController.text)));
                           },
                           text: 'Save',
                         ),
@@ -247,10 +282,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     TextView(
                       text: state.errorMessage,
                       fontColor: Colors.red,
-                    ),
-                  if (state is ProfileUpdated)
-                    const TextView(
-                      text: 'Profile Updated Successfully',
+                      maxLines: 3,
                     ),
                 ],
               ),

@@ -4,6 +4,8 @@ import 'package:cure_near/logic/profile_setup_screen/profile_setup_event.dart';
 import 'package:cure_near/logic/profile_setup_screen/profile_setup_state.dart';
 import 'package:cure_near/services/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../services/api_service.dart';
 
@@ -36,43 +38,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       },
     );
 
-    on<DateOfBirthChanged>((event, emit) {
-      try{
-        log(state.toString());
-        emit(state is ProfileSuccess
-            ? (state as ProfileSuccess).copyWith(dateOfBirth: event.dateOfBirth)
-            : state);
-      } catch (e, stack) {
-        log('Error $e');
-        log('Stack $stack');
-      }
-    });
-
-    on<GenderChanged>((event, emit) {
-      emit(state is ProfileSuccess
-          ? (state as ProfileSuccess).copyWith(gender: event.gender)
-          : state);
+    on<ProfilePageRefresh>((event, emit) {
+      emit(ProfileRefreshing());
+      emit(state);
     });
 
     on<ProfileSubmitted>(
       (event, emit) async {
-        emit(ProfileLoading());
+        emit(ProfileSubmitting());
 
         try {
-          // // Simulate a network call
-          // await Future.delayed(const Duration(seconds: 2));
-
           String userId = SharedPrefsHelper().getString('userId') ?? '';
           final response = await callProfileSetupApi(event.phoneNumber.toString(), event.dateOfBirth.toString(), event.gender.toString(), userId);
 
           // Check the response
           if (response != null && response.statusCode == 200) {
-            // emit(SignUpSuccess(response.data));
+            Fluttertoast.showToast(msg: 'Profile Setup Successfully, taking you to home page');
+            emit(ProfileUpdated());
           } else {
             emit(ProfileFailure('Failed to update profile: ${response.data['message']}'));
           }
-
-          emit(ProfileUpdated());
         } catch (error) {
           emit(ProfileFailure('Failed to update profile: ${error.toString()}'));
         }
@@ -88,7 +73,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       'userId': userId,
     };
 
-    return await _apiService.post('auth/profile-setup', data: data);
+    return await _apiService.post('auth/profile-setup', data: data, auth: true);
   }
 
 }

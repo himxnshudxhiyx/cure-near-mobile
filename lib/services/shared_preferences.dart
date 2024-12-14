@@ -53,6 +53,7 @@ class SharedPrefsHelper {
 
   /// Clear all shared preferences
   Future<void> clearAll() async {
-    await _prefs?.clear();
+    remove('authToken');
+    remove('userId');
   }
 }

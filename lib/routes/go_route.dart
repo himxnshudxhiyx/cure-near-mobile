@@ -1,3 +1,4 @@
+import 'package:cure_near/ui/home_screen/home_screen.dart';
 import 'package:cure_near/ui/login_screen/login_screen.dart';
 import 'package:cure_near/ui/on_boarding_screen/on_boarding_screen.dart';
 import 'package:cure_near/ui/profile_setup_screen/profile_setup_screen.dart';
@@ -72,6 +73,16 @@ final GoRouter router = GoRouter(
           return CustomTransitionPage(
             key: state.pageKey,
             child: const ProfileSetupScreen(),
+            transitionsBuilder: commonTransition,
+          );
+        },
+    ),
+    GoRoute(
+      path: '/home',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const HomeScreen(),
             transitionsBuilder: commonTransition,
           );
         },
