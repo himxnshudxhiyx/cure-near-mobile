@@ -1,16 +1,28 @@
-# cure_near
+# CureNear Mobile
 
-A new Flutter project.
+CureNear is a mobile application built using Flutter, designed for users to book appointments with doctors at specific hospitals. The app integrates with a backend powered by Node.js and MongoDB.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- User authentication (login, signup)
+- Profile setup (personal details, gender, date of birth)
+- Hospital and doctor search
+- Book, view, and manage appointments
+- View appointment history
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Frontend:** Flutter (Dart)
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Setup
+
+### Prerequisites
+- Install Flutter: [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
+- Set up a Node.js server with MongoDB.
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/himxnshudxhiyx/cure-near-mobile.git
