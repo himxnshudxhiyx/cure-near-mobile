@@ -1,3 +1,4 @@
+import 'package:cure_near/services/global_functions.dart';
 import 'package:cure_near/services/shared_preferences.dart';
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
@@ -47,10 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
               SharedPrefsHelper().setString('authToken', state.data['authToken']);
               SharedPrefsHelper().setString('userId', state.data['user']['_id']);
               if (isProfileSetup) {
-                context.push('/home');
-                // GoRouter.of(context).go('/home');
+                GoRouter.of(context).pushReplacement('/home');
               } else {
-                context.push('/profileSetup');
+                GoRouter.of(context).pushReplacement('/profileSetup');
               }
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -133,6 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? const CupertinoActivityIndicator()
                         : ElevatedButtonWidget(
                             onPressed: () {
+                              GlobalFunctions.hideKeyboard();
                               context.read<LoginBloc>().add(
                                     LoginSubmitted(
                                       email: _emailController.text,
@@ -199,8 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _signUpAndForgot(context) {
     return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-      },
+      listener: (context, state) {},
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           return SizedBox(
@@ -230,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        context.push('/signUp');
+                        GoRouter.of(context).push('/signUp');
                       },
                       child: const TextView(
                         text: "Sign Up",

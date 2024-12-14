@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'logic/home_screen/home_bloc.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefsHelper().initPrefs(); // Initialize shared preferences
   runApp(const MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ProfileBloc>(
           create: (context) => ProfileBloc(),
+        ),
+        BlocProvider<HomeBloc>(
+          create: (context) => HomeBloc(),
         ),
       ],
       child: ScreenUtilInit(

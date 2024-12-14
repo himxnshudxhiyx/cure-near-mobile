@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 
 extension LoggerExtension on Object {
@@ -34,14 +35,14 @@ class Logger {
 
   // Log API responses, including method name, URL, request, and response
   static logAPIResponse({
-    bool isGoApi = false,
     required String methodName,
     required String webLink,
     required Map? request,
     required Object? response,
+    required Object? duration,
   }) {
     if (kDebugMode) {
-      log('\n\n**************************URL**************************\n\n$webLink\n\n');
+      log('\n\n**************************URL**************************\n\n${'$webLink' '   $duration ms'}\n\n');
       if (methodName == 'Get') {
         log("\n\n**************************RESPONSE**************************\n\n${const JsonEncoder.withIndent('  ').convert(jsonDecode(response.toString()))}\n\n");
       } else {

@@ -20,6 +20,7 @@ class ApiService {
   // GET request
   Future<Response?> get(String url, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? data, bool? auth}) async {
     try {
+      var startTime = DateTime.now().millisecondsSinceEpoch;
       final response = await _dio.get(
         url,
         queryParameters: queryParameters,
@@ -32,10 +33,12 @@ class ApiService {
               )
             : null,
       );
-      Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: response);
+      var endTime = DateTime.now().millisecondsSinceEpoch;
+      Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: response, duration: endTime - startTime);
       return response;
     } on DioException catch (e) {
-      Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: e.error);
+      var endTime = DateTime.now().millisecondsSinceEpoch;
+      Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: e.error, duration: 'null');
       // Handle errors here
       log('GET request error: ${e.message}');
       return e.response;
@@ -45,6 +48,7 @@ class ApiService {
   // POST request
   Future<Response?> post(String url, {Map<String, dynamic>? data, bool? auth}) async {
     try {
+      var startTime = DateTime.now().millisecondsSinceEpoch;
       final response = await _dio.post(
         url,
         data: data,
@@ -56,10 +60,11 @@ class ApiService {
               )
             : null,
       );
-      Logger.logAPIResponse(methodName: 'Post', webLink: url, request: data, response: response);
+      var endTime = DateTime.now().millisecondsSinceEpoch;
+      Logger.logAPIResponse(methodName: 'Post', webLink: url, request: data, response: response, duration: endTime - startTime);
       return response;
     } on DioException catch (e) {
-      Logger.logAPIResponse(methodName: 'Post', webLink: url, request: data, response: e.error);
+      Logger.logAPIResponse(methodName: 'Post', webLink: url, request: data, response: e.error, duration: 'null');
       // Handle errors here
       log('POST request error: ${e.message}');
       return e.response;

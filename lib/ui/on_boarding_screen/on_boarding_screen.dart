@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../logic/on_boarding_screen/onboarding_bloc.dart';
 import '../../logic/on_boarding_screen/onboarding_event.dart';
 import '../../logic/on_boarding_screen/onboarding_state.dart';
@@ -32,7 +33,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             if (state is OnboardingComplete) {
               try {
                 SharedPrefsHelper().setBool("isFirstTime", false);
-                context.go('/login');
+                GoRouter.of(context).push('/login');
               } catch (e, stack) {
                 log('Error--->>> $e');
                 log('Stack--->>> $stack');
@@ -54,11 +55,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           }
                         },
                         children: [
-                          _buildPage("Find Nearby Hospitals", "Discover the best hospitals close to your location, with a list of trusted healthcare providers for any medical need.",
+                          _buildPage(
+                              "Find Nearby Hospitals",
+                              "Discover the best hospitals close to your location, with a list of trusted healthcare providers for any medical need.",
                               "assets/Icon_Onboarding.png"),
-                          _buildPage("Book Appointments Easily", "Schedule appointments at hospitals quickly and conveniently without long waits, anytime, anywhere.",
+                          _buildPage(
+                              "Book Appointments Easily",
+                              "Schedule appointments at hospitals quickly and conveniently without long waits, anytime, anywhere.",
                               "assets/Icon_Onboarding_1.png"),
-                          _buildPage("Manage Your Health Efficiently", "Keep track of your health records, appointments, and reminders in one simple, user-friendly app.",
+                          _buildPage(
+                              "Manage Your Health Efficiently",
+                              "Keep track of your health records, appointments, and reminders in one simple, user-friendly app.",
                               "assets/Icon_Onboarding_2.png"),
                         ],
                       ),
@@ -84,7 +91,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     Padding(
                       padding: EdgeInsets.only(bottom: 18.sp),
                       child: GestureDetector(
-                        child: TextView(text: 'Skip', fontSize: 12.sp,),
+                        child: TextView(
+                          text: 'Skip',
+                          fontSize: 12.sp,
+                        ),
                         onTap: () {
                           context.read<OnboardingBloc>().add(CompleteOnboardingEvent());
                         },

@@ -1,44 +1,47 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../services/api_service.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
+/// LoginBloc handles login events and states.
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final ApiService _apiService = ApiService();
 
-  LoginBloc() : super(LoginInitial()){
+  // Initial state is LoginInitial
+  LoginBloc() : super(LoginInitial()) {
+    // Handle LoginSubmitted event
     on<LoginSubmitted>(_onLoginSubmitted);
   }
 
-  // Event handler for LoginSubmitted
+  /// Event handler for login submission.
   Future<void> _onLoginSubmitted(
       LoginSubmitted event,
       Emitter<LoginState> emit,
       ) async {
-    emit(LoginLoading()); // Show loading spinner when API call starts
+    emit(LoginLoading()); // Emit loading state while API call is in progress
 
     try {
-      // Make the API call for login
-      final response = await callLoginApi(event.email, event.password);
+      // Call the login API
+      final response = await _callLoginApi(event.email, event.password);
 
-      // Check the response
+      // Check if response is successful
       if (response != null && response.statusCode == 200) {
-        emit(LoginSuccess(response.data));
+        emit(LoginSuccess(response.data)); // Emit success state
       } else {
-        emit(LoginFailure('Invalid credentials'));
+        emit(LoginFailure('Invalid credentials')); // Emit failure state on invalid response
       }
     } catch (e) {
-      emit(LoginFailure('An error occurred during login: ${e.toString()}'));
+      emit(LoginFailure('An error occurred during login: ${e.toString()}')); // Emit failure on error
     }
   }
 
-  callLoginApi(String email, String password) async {
+  /// Makes the login API call.
+  Future<dynamic> _callLoginApi(String email, String password) async {
     final data = {
       'username': email,
       'password': password,
     };
-
+    // Send a POST request to the login API
     return await _apiService.post('auth/login', data: data);
   }
 }
