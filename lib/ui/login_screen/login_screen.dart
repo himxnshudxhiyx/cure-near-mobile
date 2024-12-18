@@ -48,9 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
               SharedPrefsHelper().setString('authToken', state.data['authToken']);
               SharedPrefsHelper().setString('userId', state.data['user']['_id']);
               if (isProfileSetup) {
-                GoRouter.of(context).pushReplacement('/home');
+                GoRouter.of(context).go('/main');
               } else {
-                GoRouter.of(context).pushReplacement('/profileSetup');
+                GoRouter.of(context).go('/profileSetup');
               }
             } else if (state is LoginFailure) {
               ScaffoldMessenger.of(context).showSnackBar(

@@ -6,3 +6,5 @@ class UpdateHomeData extends HomeEvent {
   final String newData;
   UpdateHomeData(this.newData);
 }
+
+class GetLocationEvent extends HomeEvent {}
