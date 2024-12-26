@@ -35,7 +35,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         openAppSettings();
       }
     } catch (e) {
-      Logger.logObject(object: 'Error getting location ${e.toString()}');
+      // Logger.logObject(object: 'Error getting location ${e.toString()}');
       emit(HomeLocationError(e.toString()));
     }
   }
