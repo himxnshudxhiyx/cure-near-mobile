@@ -22,7 +22,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             accuracy: LocationAccuracy.high,
           ),
         );
+
         Placemark place = await getAddressFromCoordinates(position.latitude, position.longitude);
+
         emit(HomeLocationState(place: place));
       } else if (locPermissionStatus.isDenied) {
         Logger.logObject(object: 'Location permission denied by user.');
