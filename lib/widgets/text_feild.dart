@@ -15,8 +15,10 @@ class AppTextField extends StatefulWidget {
   final int? maxLines;
   final String? Function(String?)? validator;
   final Color? fillColor;
+  final Color? borderColor;
   final bool? filled;
   final bool? enabled;
+  final FocusNode? focusNode;
 
   const AppTextField({
     super.key,
@@ -31,8 +33,10 @@ class AppTextField extends StatefulWidget {
     this.prefixIcon,
     this.validator,
     this.fillColor,
+    this.borderColor,
     this.filled,
     this.enabled,
+    this.focusNode,
   });
 
   @override
@@ -75,31 +79,21 @@ class _AppTextFieldState extends State<AppTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: widget.enabled ?? true,
+      focusNode: widget.focusNode ?? FocusNode(),
       controller: widget.controller,
       maxLines: widget.maxLines ?? 1,
       obscureText: _isObscured,
       validator: widget.validator,
       keyboardType: widget.keyboardType,
-      style: TextStyle(
-          fontSize: 16.sp,
-          color: Colors.grey.shade700,
-          fontFamily: GoogleFonts.poppins()
-              .fontFamily,
-          fontWeight:  FontWeight.w500
-      ),
+      style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700, fontFamily: GoogleFonts.poppins().fontFamily, fontWeight: FontWeight.w500),
       inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(
-            fontSize: 16.sp,
-            color: Colors.grey.shade700,
-            fontFamily: GoogleFonts.poppins()
-                .fontFamily,
-            fontWeight:  FontWeight.w500
-        ),
+        hintStyle: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700, fontFamily: GoogleFonts.poppins().fontFamily, fontWeight: FontWeight.w500),
         labelText: widget.labelText,
         fillColor: widget.fillColor ?? Colors.grey.shade200,
         filled: widget.filled ?? false,
+        enabled: widget.enabled ?? true,
         enabledBorder: OutlineInputBorder(
           borderRadius: const BorderRadius.all(
             Radius.circular(
@@ -107,14 +101,24 @@ class _AppTextFieldState extends State<AppTextField> {
             ),
           ),
           borderSide: BorderSide(
-            color: Colors.grey.shade400,
+            color: widget.borderColor ?? Colors.grey.shade400,
           ),
         ),
-        border: const OutlineInputBorder(
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(
               8.0,
             ),
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              8.0,
+            ),
+          ),
+          borderSide: BorderSide(
+            color: widget.borderColor ?? Colors.grey.shade400,
           ),
         ),
         // suffixIcon: widget.suffixWidget,

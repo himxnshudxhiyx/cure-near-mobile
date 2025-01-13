@@ -16,6 +16,8 @@ class Logger {
   static logObject({required Object object}) {
     if (kDebugMode) {
       log('****************** Logger *****************\n${object.toString()}\n*******************************************');
+    } else {
+      print(object.toString());
     }
   }
 

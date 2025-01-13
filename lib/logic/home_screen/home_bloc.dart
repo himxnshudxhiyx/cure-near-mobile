@@ -24,8 +24,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
 
         Placemark place = await getAddressFromCoordinates(position.latitude, position.longitude);
-
-        emit(HomeLocationState(place: place));
+        print('Place is ${place}');
+        if (place.postalCode != null) {
+          emit(HomeLocationState(place: place));
+        }
       } else if (locPermissionStatus.isDenied) {
         Logger.logObject(object: 'Location permission denied by user.');
         emit(HomeLocationError('Location permission denied by user.'));
@@ -35,7 +37,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         openAppSettings();
       }
     } catch (e) {
-      // Logger.logObject(object: 'Error getting location ${e.toString()}');
+      Logger.logObject(object: 'Error getting location ${e.toString()}');
       emit(HomeLocationError(e.toString()));
     }
   }

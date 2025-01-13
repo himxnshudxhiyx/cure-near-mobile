@@ -37,7 +37,6 @@ class ApiService {
       Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: response, duration: endTime - startTime);
       return response;
     } on DioException catch (e) {
-      var endTime = DateTime.now().millisecondsSinceEpoch;
       Logger.logAPIResponse(methodName: 'Get', webLink: url, request: queryParameters, response: e.error, duration: 'null');
       // Handle errors here
       log('GET request error: ${e.message}');

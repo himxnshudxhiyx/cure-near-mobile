@@ -168,11 +168,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 
-  Widget _buildBottomNavigationBar(BuildContext context) {
+/*Widget _buildBottomNavigationBar(BuildContext context) {
     return BlocBuilder<OnboardingBloc, OnboardingState>(
       builder: (context, state) {
         return Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.sp),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -199,5 +199,5 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         );
       },
     );
-  }
+  }*/
 }

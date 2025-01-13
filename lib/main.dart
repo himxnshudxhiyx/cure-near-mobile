@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'logic/home_screen/home_bloc.dart';
+import 'logic/search_bar/search_bar_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,18 +43,30 @@ class MyApp extends StatelessWidget {
         BlocProvider<TabBarBloc>(
           create: (context) => TabBarBloc(),
         ),
+        BlocProvider<SearchBloc>(
+          create: (context) => SearchBloc(),
+        ),
       ],
       child: ScreenUtilInit(
-        builder: (context, child) => MaterialApp.router(
-          theme: ThemeData(
-            primaryColor: Colors.teal,
-            colorScheme: ColorScheme.fromSwatch().copyWith(
-              primary: Colors.teal,
+        builder: (context, child) => GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () async {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus!.unfocus();
+            }
+          },
+          child: MaterialApp.router(
+            theme: ThemeData(
+              primaryColor: Colors.teal,
+              colorScheme: ColorScheme.fromSwatch().copyWith(
+                primary: Colors.teal,
+              ),
             ),
+            routerDelegate: router.routerDelegate,
+            routeInformationParser: router.routeInformationParser,
+            routeInformationProvider: router.routeInformationProvider,
           ),
-          routerDelegate: router.routerDelegate,
-          routeInformationParser: router.routeInformationParser,
-          routeInformationProvider: router.routeInformationProvider,
         ),
       ),
     );

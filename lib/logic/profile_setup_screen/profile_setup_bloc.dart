@@ -5,7 +5,6 @@ import 'package:cure_near/logic/profile_setup_screen/profile_setup_state.dart';
 import 'package:cure_near/services/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../services/api_service.dart';
 
@@ -75,5 +74,4 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     return await _apiService.post('auth/profile-setup', data: data, auth: true);
   }
-
 }
