@@ -68,21 +68,21 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: false,
         // backgroundColor: Colors.blueAccent,
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 12.w),
-            child: CustomInkwell(
-              onTap: () {
-                SharedPrefsHelper().clearAll();
-                GoRouter.of(context).push('/login');
-              },
-              child: const Icon(
-                Icons.logout,
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.only(right: 12.w),
+        //     child: CustomInkwell(
+        //       onTap: () {
+        //         SharedPrefsHelper().clearAll();
+        //         GoRouter.of(context).push('/login');
+        //       },
+        //       child: const Icon(
+        //         Icons.logout,
+        //         color: Colors.red,
+        //       ),
+        //     ),
+        //   ),
+        // ],
       ),
       body: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {

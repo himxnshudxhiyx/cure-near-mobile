@@ -1,5 +1,6 @@
 import 'package:cure_near/services/global_functions.dart';
 import 'package:cure_near/services/shared_preferences.dart';
+import 'package:cure_near/widgets/custom_inkwell.dart';
 import 'package:cure_near/widgets/elevated_button_widget.dart';
 import 'package:cure_near/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  FocusNode _emailFocusNode = FocusNode();
+  FocusNode _passwordFocusNode = FocusNode();
+
   @override
   void initState() {
     if (kDebugMode) {
@@ -41,9 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Login Successful')),
-              );
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   const SnackBar(content: Text('Login Successful')),
+              // );
               final isProfileSetup = state.data['user']['isProfileSetup'] ?? false;
               SharedPrefsHelper().setString('authToken', state.data['authToken']);
               SharedPrefsHelper().setString('userId', state.data['user']['_id']);
@@ -68,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     AppTextField(
                       hintText: "Email",
                       controller: _emailController,
+                      focusNode: _emailFocusNode,
                       prefixIcon: Icon(
                         Icons.email_outlined,
                         color: Colors.grey.shade700,
@@ -93,6 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                       obscureText: true,
                       filled: true,
+                      focusNode: _passwordFocusNode,
                       prefixIcon: Icon(
                         Icons.lock_outline_rounded,
                         color: Colors.grey.shade700,
@@ -210,11 +216,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 30.sp,
                 ),
-                const TextView(
-                  text: "Forgot password?",
-                  // fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                  fontColor: Colors.blue,
+                CustomInkwell(
+                  onTap: () {
+                    GoRouter.of(context).push('/forgotPassword');
+                  },
+                  child: const TextView(
+                    text: "Forgot password?",
+                    // fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    fontColor: Colors.blue,
+                  ),
                 ),
                 SizedBox(
                   height: 16.sp,
