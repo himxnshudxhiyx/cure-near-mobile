@@ -7,6 +7,7 @@ import 'package:cure_near/ui/signUp_screen/signUp_screen.dart';
 import 'package:cure_near/ui/tab_bar_screen/tab_bar_screen.dart';
 import 'package:go_router/go_router.dart';
 
+import '../ui/forgot_password_screen/forgot_password_screen.dart';
 import '../ui/splash_screen/splash_screen.dart';
 import 'custom_transition.dart';
 
@@ -105,6 +106,16 @@ final GoRouter router = GoRouter(
         return CustomTransitionPage(
           key: state.pageKey,
           child: SearchScreen(),
+          transitionsBuilder: commonTransition,
+        );
+      },
+    ),
+    GoRoute(
+      path: '/forgotPassword',
+      pageBuilder: (context, state) {
+        return CustomTransitionPage(
+          key: state.pageKey,
+          child: ForgotPasswordScreen(),
           transitionsBuilder: commonTransition,
         );
       },

@@ -1,4 +1,5 @@
 import 'package:cure_near/logic/login_screen/login_bloc.dart';
+import 'package:cure_near/logic/profile_screen/profile_screen_bloc.dart';
 import 'package:cure_near/logic/profile_setup_screen/profile_setup_bloc.dart';
 import 'package:cure_near/logic/signUp_screen/signUp_bloc.dart';
 import 'package:cure_near/logic/splash_screen/splash_bloc.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'logic/forgot_password_screen/forgot_password_bloc.dart';
 import 'logic/home_screen/home_bloc.dart';
 import 'logic/search_bar/search_bar_bloc.dart';
 
@@ -45,6 +47,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<SearchBloc>(
           create: (context) => SearchBloc(),
+        ),
+        BlocProvider<ProfileScreenBloc>(
+          create: (context) => ProfileScreenBloc(),
+        ),
+        BlocProvider<ForgotPasswordBloc>(
+          create: (context) => ForgotPasswordBloc(),
         ),
       ],
       child: ScreenUtilInit(
