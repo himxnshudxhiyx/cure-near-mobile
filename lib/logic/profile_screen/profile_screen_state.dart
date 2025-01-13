@@ -1,16 +1,23 @@
-import 'package:geocoding/geocoding.dart';
-
 abstract class ProfileScreenState {}
 
-class ProfileInitial extends ProfileScreenState {}
+class ProfileInitialState extends ProfileScreenState {}
 
-class ProfileLoading extends ProfileScreenState {}
+class ProfileLoadingState extends ProfileScreenState {}
 
-class ProfileLoaded extends ProfileScreenState {
+class ProfileLoadedState extends ProfileScreenState {
+  final String name;
+  final String email;
+  final String phone;
+
+  ProfileLoadedState({
+    required this.name,
+    required this.email,
+    required this.phone,
+  });
 }
 
-class ProfileError extends ProfileScreenState {
+class ProfileErrorState extends ProfileScreenState {
   final String message;
 
-  ProfileError(this.message);
+  ProfileErrorState(this.message);
 }

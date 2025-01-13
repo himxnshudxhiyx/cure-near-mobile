@@ -1,9 +1,13 @@
+import 'package:cure_near/logic/profile_screen/profile_screen_bloc.dart';
 import 'package:cure_near/ui/booking_screen/booking_screen.dart';
 import 'package:cure_near/ui/home_screen/home_screen.dart';
 import 'package:cure_near/ui/profile_screen/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+
+import '../../logic/profile_screen/profile_screen_event.dart';
 
 class TabBarScreen extends StatefulWidget {
   const TabBarScreen({super.key});
@@ -34,7 +38,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
         title: ("Home"),
         activeColorPrimary: CupertinoColors.activeBlue,
         inactiveColorPrimary: CupertinoColors.systemGrey,
-        scrollController: _scrollController1,
+        // scrollController: _scrollController1,
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
           initialRoute: "/home",
           routes: {
@@ -49,7 +53,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
         title: ("Bookings"),
         activeColorPrimary: CupertinoColors.activeGreen,
         inactiveColorPrimary: CupertinoColors.systemGrey,
-        scrollController: _scrollController2,
+        // scrollController: _scrollController2,
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
           initialRoute: "/home",
           routes: {
@@ -64,7 +68,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
         title: ("Profile"),
         activeColorPrimary: CupertinoColors.activeOrange,
         inactiveColorPrimary: CupertinoColors.systemGrey,
-        scrollController: _scrollController3,
+        // scrollController: _scrollController3,
         routeAndNavigatorSettings: RouteAndNavigatorSettings(
           initialRoute: "/home",
           routes: {
@@ -99,6 +103,11 @@ class _TabBarScreenState extends State<TabBarScreen> {
       // padding: const EdgeInsets.only(top: 8),
       // backgroundColor: Colors.grey.shade900,
       isVisible: true,
+      onItemSelected: (value) {
+        if (value == 2) {
+          context.read<ProfileScreenBloc>().add(GetProfileDetailsEvent());
+        }
+      },
       animationSettings: const NavBarAnimationSettings(
         navBarItemAnimation: ItemAnimationSettings(
           // Navigation Bar's items animation properties.

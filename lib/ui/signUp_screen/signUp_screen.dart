@@ -22,8 +22,11 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
+
+  FocusNode _emailFocusNode = FocusNode();
+  FocusNode _passwordFocusNode = FocusNode();
+  FocusNode _nameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -60,6 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppTextField(
                       hintText: "Name",
                       controller: _nameController,
+                      focusNode: _nameFocusNode,
                       prefixIcon: Icon(
                         Icons.person_2_outlined,
                         color: Colors.grey.shade700,
@@ -78,6 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppTextField(
                       hintText: "Email",
                       controller: _emailController,
+                      focusNode: _emailFocusNode,
                       prefixIcon: Icon(
                         Icons.email_outlined,
                         color: Colors.grey.shade700,
@@ -101,6 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     AppTextField(
                       hintText: "Password",
                       controller: _passwordController,
+                      focusNode: _passwordFocusNode,
                       obscureText: true,
                       filled: true,
                       prefixIcon: Icon(
