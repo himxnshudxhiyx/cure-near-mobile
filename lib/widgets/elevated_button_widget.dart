@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class ElevatedButtonWidget extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? color;
   final Color? textColor;
   final Color? bgColor;
@@ -28,11 +28,13 @@ class ElevatedButtonWidget extends StatelessWidget {
     var media = MediaQuery.of(context).size;
     return SizedBox(
       width: width ?? media.width * 0.9,
-      height: height?? media.height * 0.06,
+      height: height ?? media.height * 0.06,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          foregroundColor: color ?? Colors.white, backgroundColor: bgColor ?? Theme.of(context).primaryColor, elevation: 0,
+          foregroundColor: color ?? Colors.white,
+          backgroundColor: bgColor ?? Theme.of(context).primaryColor,
+          elevation: 0,
         ),
         child: TextView(
           text: text,
