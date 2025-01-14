@@ -50,6 +50,7 @@ dependencies:
   geocoding: ^3.0.0
   persistent_bottom_nav_bar: ^6.2.1
   flutter_otp_text_field: ^1.4.0+2
+  flutter_launcher_icons: ^0.14.2
 
 
 dev_dependencies:
@@ -67,6 +68,13 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/app_icon.png"
+  min_sdk_android: 21
+
 flutter:
 
   # The following line ensures that the Material Icons font is
