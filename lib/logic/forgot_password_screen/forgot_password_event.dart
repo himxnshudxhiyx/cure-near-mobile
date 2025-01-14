@@ -8,13 +8,15 @@ class EnterEmailEvent extends ForgotPasswordEvent {
 
 class VerifyOtpEvent extends ForgotPasswordEvent {
   final String otp;
+  final String email;
 
-  VerifyOtpEvent(this.otp);
+  VerifyOtpEvent(this.otp, this.email);
 }
 
 class ChangePasswordEvent extends ForgotPasswordEvent {
   final String newPassword;
   final String confirmPassword;
+  final String email;
 
-  ChangePasswordEvent(this.newPassword, this.confirmPassword);
+  ChangePasswordEvent(this.newPassword, this.confirmPassword, this.email);
 }

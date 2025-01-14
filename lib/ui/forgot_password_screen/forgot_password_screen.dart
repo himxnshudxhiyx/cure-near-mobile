@@ -22,6 +22,12 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  TextEditingController emailController = TextEditingController();
+  FocusNode emailFocusNode = FocusNode();
+  GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
+  final otpController = TextEditingController();
+  GlobalKey<FormState> otpFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -81,9 +87,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _emailInputView(BuildContext context, bool isSubmitting) {
-    TextEditingController emailController = TextEditingController();
-    FocusNode emailFocusNode = FocusNode();
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: Column(
@@ -112,7 +115,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             height: 10.h,
           ),
           Form(
-            key: formKey,
+            key: emailFormKey,
             child: AppTextField(
               hintText: "Email",
               controller: emailController,
@@ -143,7 +146,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               : ElevatedButtonWidget(
                   text: isSubmitting ? "" : "Send Code",
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
+                    if (emailFormKey.currentState!.validate()) {
                       context.read<ForgotPasswordBloc>().add(
                             EnterEmailEvent(emailController.text),
                           );
@@ -158,8 +161,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _otpInputView(BuildContext context, bool isSubmitting) {
-    final otpController = TextEditingController();
-    GlobalKey<FormState> formKey = GlobalKey<FormState>();
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: Column(
@@ -188,7 +189,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             height: 10.h,
           ),
           Form(
-            key: formKey,
+            key: otpFormKey,
             child: OtpTextField(
               numberOfFields: 5,
               focusedBorderColor: Theme.of(context).primaryColor,
@@ -208,7 +209,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 otpController.text = verificationCode;
                 Logger.logObject(object: 'OTP Entered ${otpController.text}');
                 context.read<ForgotPasswordBloc>().add(
-                      VerifyOtpEvent(otpController.text),
+                      VerifyOtpEvent(otpController.text, emailController.text),
                     );
               }, // end onSubmit
             ),
@@ -219,9 +220,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               : ElevatedButtonWidget(
                   text: isSubmitting ? "" : "Verify",
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
+                    if (otpFormKey.currentState!.validate()) {
                       context.read<ForgotPasswordBloc>().add(
-                            VerifyOtpEvent(otpController.text),
+                            VerifyOtpEvent(otpController.text, emailController.text),
                           );
                     }
                   },
@@ -346,24 +347,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   return 'Please enter your password';
                 }
                 // Check for minimum 8 characters
-                if (value.length < 8) {
-                  return 'Password must be at least 8 characters long';
-                }
-                // Check for at least one uppercase letter
-                if (!RegExp(r'[A-Z]').hasMatch(value)) {
-                  return 'Password must contain at least one uppercase letter';
-                }
-                // Check for at least one lowercase letter
-                if (!RegExp(r'[a-z]').hasMatch(value)) {
-                  return 'Password must contain at least one lowercase letter';
-                }
-                // Check for at least one digit
-                if (!RegExp(r'[0-9]').hasMatch(value)) {
-                  return 'Password must contain at least one digit';
-                }
-                // Check for at least one special character
-                if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) {
-                  return 'Password must contain at least one special character';
+                if (value != newPasswordController.text) {
+                  return 'Please enter the same password as new password';
                 }
                 return null;
               },
@@ -378,6 +363,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               ChangePasswordEvent(
                                 newPasswordController.text,
                                 confirmPasswordController.text,
+                                emailController.text,
                               ),
                             );
                       }
