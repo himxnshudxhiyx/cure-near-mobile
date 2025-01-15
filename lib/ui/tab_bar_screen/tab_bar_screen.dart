@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cure_near/logic/profile_screen/profile_screen_bloc.dart';
 import 'package:cure_near/ui/booking_screen/booking_screen.dart';
 import 'package:cure_near/ui/home_screen/home_screen.dart';
@@ -88,6 +90,8 @@ class _TabBarScreenState extends State<TabBarScreen> {
     // context.read<TabBarBloc>().add(TabChanged(0));
   }
 
+  DateTime? _lastBackPressed;
+
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(
@@ -95,7 +99,7 @@ class _TabBarScreenState extends State<TabBarScreen> {
       controller: _controller,
       screens: _buildScreens(),
       items: _navBarsItems(),
-      handleAndroidBackButtonPress: true,
+      // handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
       hideNavigationBarWhenKeyboardAppears: true,
@@ -121,6 +125,20 @@ class _TabBarScreenState extends State<TabBarScreen> {
         ),
       ),
       confineToSafeArea: true,
+      onWillPop: (p0) async {
+        DateTime now = DateTime.now();
+        if (_lastBackPressed == null || now.difference(_lastBackPressed!) > Duration(seconds: 2)) {
+          _lastBackPressed = now;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Press back again to exit'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return false;
+        }
+        exit(0);
+      },
       navBarHeight: kBottomNavigationBarHeight,
       navBarStyle: NavBarStyle.style1,
       decoration: NavBarDecoration(

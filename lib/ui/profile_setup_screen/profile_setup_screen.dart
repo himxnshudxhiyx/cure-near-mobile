@@ -43,7 +43,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         log('Listener triggered: $state');
         if (state is ProfileUpdated) {
           // Perform navigation here
-          GoRouter.of(context).push('/home');
+          GoRouter.of(context).go('/main');
         }
       },
       builder: (context, state) {
