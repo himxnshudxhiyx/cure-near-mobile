@@ -1,3 +1,5 @@
+import 'package:cure_near/logic/search_bar/search_bar_event.dart';
+import 'package:cure_near/services/logger_service.dart';
 import 'package:cure_near/widgets/custom_app_bar.dart';
 import 'package:cure_near/widgets/custom_inkwell.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,54 +31,59 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SearchBloc(),
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: 'Search',
-          leadingIcon: CustomInkwell(
-            onTap: () {
-              GoRouter.of(context).pop('true');
-            },
-            child: Icon(
-              CupertinoIcons.back,
-            ),
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Search',
+        leadingIcon: CustomInkwell(
+          onTap: () {
+            GoRouter.of(context).pop('true');
+          },
+          child: Icon(
+            CupertinoIcons.back,
           ),
         ),
-        body: Padding(
+      ),
+      body: BlocProvider(
+        create: (_) {
+          return SearchBloc();
+        },
+        child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
           child: Column(
             children: [
-              AppTextField(
-                controller: _searchTextController,
-                fillColor: Colors.grey.shade100,
-                filled: true,
-                focusNode: _searchFocusNode,
-                borderColor: Colors.transparent,
-                hintText: "Search Doctor, Hospital, Medicine",
-                hintFontSize: 12,
-                prefixIcon: Icon(CupertinoIcons.search),
+              BlocConsumer<SearchBloc, SearchBarState>(
+                listener: (context, state) {},
+                builder: (context, state) => AppTextField(
+                  controller: _searchTextController,
+                  fillColor: Colors.grey.shade100,
+                  filled: true,
+                  focusNode: _searchFocusNode,
+                  borderColor: Colors.transparent,
+                  hintText: "Search Doctor, Hospital, Medicine",
+                  hintFontSize: 12,
+                  prefixIcon: Icon(CupertinoIcons.search),
+                  onChanged: (val) {
+                    if (val != '') {
+                      context.read<SearchBloc>().add(SearchStarted());
+                    }
+                  },
+                ),
               ),
-              // BlocConsumer to handle UI and side effects
               Expanded(
                 child: BlocConsumer<SearchBloc, SearchBarState>(
                   listener: (context, state) {
+                    Logger.logObject(object: 'State in Listener: $state');
                     if (state is SearchBarError) {
-                      // Show a SnackBar for errors
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(state.message)),
                       );
                     }
                   },
                   builder: (context, state) {
-                    /*if (state is SearchBarInitial) {
-                      return const Center(
-                        child: Text("Start searching by typing above."),
-                      );
-                    } else*/
+                    Logger.logObject(object: 'State in Builder: $state');
                     if (state is SearchBarStarted) {
                       return const Center(
-                        child: CircularProgressIndicator(),
+                        child: CupertinoActivityIndicator(),
                       );
                     } else if (state is SearchBarFinished) {
                       return const Center(
@@ -90,7 +97,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                       );
                     }
-                    return const SizedBox.shrink(); // Fallback for unknown states
+                    return const Center(
+                      child: Text("Start searching by typing above."),
+                    );
                   },
                 ),
               ),
