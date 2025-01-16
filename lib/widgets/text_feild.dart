@@ -20,6 +20,7 @@ class AppTextField extends StatefulWidget {
   final bool? enabled;
   final FocusNode? focusNode;
   final double? hintFontSize;
+  final Function(String)? onChanged;
 
   const AppTextField({
     super.key,
@@ -39,6 +40,7 @@ class AppTextField extends StatefulWidget {
     this.enabled,
     this.focusNode,
     this.hintFontSize,
+    this.onChanged,
   });
 
   @override
@@ -150,6 +152,7 @@ class _AppTextFieldState extends State<AppTextField> {
       ),
       onChanged: (value) {
         _validate();
+        widget.onChanged?.call(value);
       },
     );
   }
