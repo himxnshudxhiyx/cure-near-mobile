@@ -54,6 +54,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 focusNode: _searchFocusNode,
                 borderColor: Colors.transparent,
                 hintText: "Search Doctor, Hospital, Medicine",
+                hintFontSize: 12,
                 prefixIcon: Icon(CupertinoIcons.search),
               ),
               // BlocConsumer to handle UI and side effects
@@ -68,11 +69,12 @@ class _SearchScreenState extends State<SearchScreen> {
                     }
                   },
                   builder: (context, state) {
-                    if (state is SearchBarInitial) {
+                    /*if (state is SearchBarInitial) {
                       return const Center(
                         child: Text("Start searching by typing above."),
                       );
-                    } else if (state is SearchBarStarted) {
+                    } else*/
+                    if (state is SearchBarStarted) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );

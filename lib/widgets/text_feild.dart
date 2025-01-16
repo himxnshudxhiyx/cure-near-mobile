@@ -19,6 +19,7 @@ class AppTextField extends StatefulWidget {
   final bool? filled;
   final bool? enabled;
   final FocusNode? focusNode;
+  final double? hintFontSize;
 
   const AppTextField({
     super.key,
@@ -37,6 +38,7 @@ class AppTextField extends StatefulWidget {
     this.filled,
     this.enabled,
     this.focusNode,
+    this.hintFontSize,
   });
 
   @override
@@ -85,11 +87,13 @@ class _AppTextFieldState extends State<AppTextField> {
       obscureText: _isObscured,
       validator: widget.validator,
       keyboardType: widget.keyboardType,
-      style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700, fontFamily: GoogleFonts.poppins().fontFamily, fontWeight: FontWeight.w500),
+      style: TextStyle(
+          fontSize: widget.hintFontSize?.sp ?? 16.sp, color: Colors.grey.shade700, fontFamily: GoogleFonts.poppins().fontFamily, fontWeight: FontWeight.w500),
       inputFormatters: widget.inputFormatters,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700, fontFamily: GoogleFonts.poppins().fontFamily, fontWeight: FontWeight.w500),
+        hintStyle: TextStyle(
+            fontSize: widget.hintFontSize?.sp ?? 16.sp, color: Colors.grey.shade700, fontFamily: GoogleFonts.poppins().fontFamily, fontWeight: FontWeight.w500),
         labelText: widget.labelText,
         fillColor: widget.fillColor ?? Colors.grey.shade200,
         filled: widget.filled ?? false,
