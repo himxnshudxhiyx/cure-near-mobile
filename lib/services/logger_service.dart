@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cure_near/services/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
 extension LoggerExtension on Object {
@@ -44,11 +45,13 @@ class Logger {
     required Object? duration,
   }) {
     if (kDebugMode) {
+      log('\n\n**************************TOKEN**************************\n\n${SharedPrefsHelper().getString('authToken')}');
       log('\n\n**************************URL**************************\n\n${'$webLink' '   $duration ms'}\n\n');
       if (methodName == 'Get') {
         log("\n\n**************************RESPONSE**************************\n\n${const JsonEncoder.withIndent('  ').convert(jsonDecode(response.toString()))}\n\n");
       } else {
-        log("\n\n**************************REQUESTS**************************\n\n${const JsonEncoder.withIndent(' ').convert(request)}\n\n");
+        if (request != null)
+          log("\n\n**************************REQUESTS**************************\n\n${const JsonEncoder.withIndent(' ').convert(request)}\n\n");
         log("\n\n**************************RESPONSE**************************\n\n${const JsonEncoder.withIndent('  ').convert(jsonDecode(response.toString()))}\n\n");
       }
     }

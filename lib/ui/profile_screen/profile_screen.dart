@@ -73,9 +73,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             );
           } else if (state is ProfileErrorState) {
             return Center(
-              child: Text(
-                'Failed to load profile details.',
-                style: TextStyle(color: Colors.red, fontSize: 16.sp),
+              child: TextView(
+                text: 'Failed to load profile details.',
+                fontColor: Colors.red,
+                fontSize: 16,
               ),
             );
           }
