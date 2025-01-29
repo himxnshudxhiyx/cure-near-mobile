@@ -217,7 +217,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       }
                     },
                   ),
-                  //Sized Box for gap
                   SizedBox(
                     height: 20.h,
                   ),
