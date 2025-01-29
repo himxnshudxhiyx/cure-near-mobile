@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         return (state.nearByHospitals.isEmpty)
                             ? SizedBox()
                             : Container(
-                                height: 120.h,
+                                height: 140.h,
                                 child: ListView.separated(
                                   shrinkWrap: true,
                                   itemCount: state.nearByHospitals.length,
@@ -279,95 +279,39 @@ class _HomeScreenState extends State<HomeScreen> {
                                               fontColor: CustomColors.fontColor,
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 10.h,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextView(
-                                                text: "Location",
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
+                                          SizedBox(height: 10.h),
+                                          ...[
+                                            {"label": "Location", "value": category.address},
+                                            {"label": "Services", "value": category.services?.join(', ')},
+                                            {"label": "Categories", "value": category.category?.join(', ')},
+                                            {"label": "Phone", "value": category.phone}
+                                          ].map((item) {
+                                            return Padding(
+                                              padding: EdgeInsets.only(bottom: 6.h),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: TextView(
+                                                      text: item["label"]!,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 14,
+                                                      fontColor: CustomColors.fontColor,
+                                                    ),
+                                                  ),
+                                                  SizedBox(width: 20.w),
+                                                  Expanded(
+                                                    child: TextView(
+                                                      text: item["value"] ?? '',
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 14,
+                                                      fontColor: CustomColors.fontColor,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(
-                                                width: 25.w,
-                                              ),
-                                              Expanded(
-                                                child: TextView(
-                                                  text: '${category.address} jsadhfhsgdfjhasdgfj' ?? '',
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14,
-                                                  fontColor: CustomColors.fontColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextView(
-                                                text: "Services",
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
-                                              ),
-                                              SizedBox(
-                                                width: 25.w,
-                                              ),
-                                              TextView(
-                                                text: category.services?.join(', ') ?? '',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextView(
-                                                text: "Categories",
-                                                fontWeight: FontWeight.w500,
-                                                maxLines: 2,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
-                                              ),
-                                              SizedBox(
-                                                width: 25.w,
-                                              ),
-                                              TextView(
-                                                text: category.category?.join(', ') ?? '',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              TextView(
-                                                text: "Phone",
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
-                                              ),
-                                              SizedBox(
-                                                width: 25.w,
-                                              ),
-                                              TextView(
-                                                text: category.phone ?? '',
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: 14,
-                                                fontColor: CustomColors.fontColor,
-                                              ),
-                                            ],
-                                          ),
+                                            );
+                                          }).toList(),
                                         ],
                                       ),
                                     );
