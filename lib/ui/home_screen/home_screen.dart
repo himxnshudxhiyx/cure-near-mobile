@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<HomeBloc>().add(GetHospitalCatEvent());
 
     ///to get nearby hospitals
-    context.read<HomeBloc>().add(GetNearbyHospitalEvent());
+    // context.read<HomeBloc>().add(GetNearbyHospitalEvent());
   }
 
   @override
