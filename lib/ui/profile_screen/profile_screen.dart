@@ -88,7 +88,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _profileDetails(BuildContext context, String name, String email, String phone) {
     return Center(
       child: Container(
-        color: Colors.grey.shade100,
+        width: MediaQuery.sizeOf(context).width,
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          border: Border.all(width: 2, color: Colors.grey.shade300),
+          borderRadius: BorderRadius.all(
+            Radius.circular(5.r),
+          ),
+        ),
         padding: EdgeInsets.all(10.sp),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
