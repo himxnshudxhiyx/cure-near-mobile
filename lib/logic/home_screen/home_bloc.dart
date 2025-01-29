@@ -36,8 +36,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   _getNearbyHospitals(String lat, String long, Emitter<HomeState> emit) async {
     try {
-      final response =
-          await ApiService().post('hospitals/getNearbyHospitals', auth: true, data: {"lat": "28.9945832", "long": "77.0281157", "search": "", "cat": ""});
+      final response = await ApiService().post('hospitals/getNearbyHospitals', auth: true, data: {"lat": lat, "long": long, "search": "", "cat": ""});
 
       if (response != null && response.statusCode == 200) {
         final List<NearbyHospitalsDataModel> nearByHospitals = (response.data['data'] as List).map((e) => NearbyHospitalsDataModel.fromJson(e)).toList();
@@ -62,7 +61,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
 
         Placemark place = await getAddressFromCoordinates(position.latitude, position.longitude);
-        _getNearbyHospitals(position.latitude.toString(), position.longitude.toString(), emit);
+        await _getNearbyHospitals(position.latitude.toString(), position.longitude.toString(), emit);
         final currentState = state is HomeUpdatedState ? state as HomeUpdatedState : HomeUpdatedState();
         emit(currentState.copyWith(place: place));
       } else if (locPermissionStatus.isDenied) {
