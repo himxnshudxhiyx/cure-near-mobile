@@ -26,8 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    ///to get user's current location
     context.read<HomeBloc>().add(GetLocationEvent());
+
+    ///to get hospital categories
     context.read<HomeBloc>().add(GetHospitalCatEvent());
+
+    ///to get nearby hospitals
     context.read<HomeBloc>().add(GetNearbyHospitalEvent());
   }
 
